@@ -32,12 +32,13 @@ option(NASOQ_BUILD_EXAMPLES "Build NASOQ Examples" ${NASOQ_IS_TOPLEVEL})
 option(NASOQ_BUILD_TESTS "Build NASOQ Tests" ${NASOQ_IS_TOPLEVEL})
 option(NASOQ_BUILD_DOCS "Build NASOQ Documentation" ${NASOQ_IS_TOPLEVEL})
 option(NASOQ_WITH_EIGEN "Build NASOQ Eigen interface" ON)
-option(NASOQ_USE_CLAPACK "Use CLAPACK as the LAPACK implementaiton" OFF)
+option(NASOQ_USE_CLAPACK "Use CLAPACK as the LAPACK implementaiton" ON)
 option(NASOQ_USE_OPENMP "Use OpenMP" ON)
 option(NASOQ_WITH_MATLAB "Build NASOQ Matlab interface" OFF)
 
-set(NASOQ_BLAS_BACKEND "MKL" CACHE STRING "BLAS implementation for NASOQ to use")
-set_property(CACHE NASOQ_BLAS_BACKEND PROPERTY STRINGS MKL OpenBLAS)
+# set NASOQ properties such BLAS Type, etc
+set(NASOQ_BLAS_BACKEND "OpenBLAS" CACHE STRING "BLAS implementation for NASOQ to use")
+set(NASOQ_USE_CLAPACK  ON CACHE STRING "Use CLAPACK as the LAPACK implementaiton")
 
 if(${NASOQ_BLAS_BACKEND} STREQUAL "MKL")
     set(NASOQ_USE_BLAS_MKL      ON)
@@ -149,6 +150,9 @@ target_sources(nasoq PRIVATE
     "src/QP/nasoq_utils.cpp"
     "src/QP/linear_solver_wrapper.cpp"
 )
+
+# Do not build with -Werror
+target_compile_options(nasoq PRIVATE "-Wno-error")
 
 if(OpenMP_FOUND)
     target_sources(nasoq PRIVATE

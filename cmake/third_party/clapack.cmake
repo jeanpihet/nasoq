@@ -28,6 +28,8 @@ if(NOT clapack_POPULATED)
     file(GLOB clapack_SOURCE_FILES "${clapack_SOURCE_DIR}/SRC/*.c")
     add_library(clapack ${clapack_SOURCE_FILES})
     target_compile_definitions(clapack PRIVATE "NO_BLAS_WRAP")
+    # Do not build with -Werror
+    target_compile_options(clapack PRIVATE "-Wno-error")
     target_include_directories(clapack PUBLIC "${clapack_SOURCE_DIR}/INCLUDE")
 
     # just add in the f2c files needed for NASOQ's use of CLAPACK
